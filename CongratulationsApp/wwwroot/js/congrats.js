@@ -1,137 +1,111 @@
-// Simple confetti + shimmer helper
+// Optimized confetti using canvas-confetti library
 (function(){
-  const TWO_PI = Math.PI * 2;
-  const rand = (min, max) => Math.random() * (max - min) + min;
-
-  const canvas = document.createElement('canvas');
-  canvas.id = 'confetti-canvas';
-  document.addEventListener('DOMContentLoaded', () => {
-    document.body.appendChild(canvas);
-    resize();
-  });
-  window.addEventListener('resize', resize);
-
-  const ctx = canvas.getContext('2d');
-  let confetti = [];
-  let rafId = null;
-
+  // Color palette for confetti
   const palette = [
     '#ff7a18', '#ffb84d', '#af00ff', '#8a5cff', '#00d4ff', '#00ffa3', '#ffd6e0'
   ];
 
-  function resize(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  function spawnBurst(x, y, count = 120){
+  function createConfettiBurst(x, y, count = 120) {
     // Check for low effects mode
     const isLowEffects = document.body.classList.contains('low-effects');
-    const adjustedCount = isLowEffects ? Math.round(count * 0.3) : count; // 30% confetti in low effects mode
+    const adjustedCount = isLowEffects ? Math.round(count * 0.4) : count;
     
-    for(let i=0; i<adjustedCount; i++){
-      confetti.push({
-        x, y,
-        r: rand(2,5),
-        w: rand(4,9),
-        h: rand(6,14),
-        angle: rand(0, TWO_PI),
-        spin: rand(-0.25, 0.25),
-        vx: Math.cos(rand(0, TWO_PI)) * rand(2, 7),
-        vy: Math.sin(rand(0, TWO_PI)) * rand(2, 7) - rand(2,6),
-        g: rand(0.05, 0.12),
-        c: palette[(Math.random()*palette.length)|0],
-        life: rand(60, 120)
-      });
+    // Create multiple smaller bursts for more dynamic effect
+    const burstCount = isLowEffects ? 2 : 3;
+    
+    for (let i = 0; i < burstCount; i++) {
+      setTimeout(() => {
+        confetti({
+          particleCount: Math.round(adjustedCount / burstCount),
+          angle: 90 + (i - 1) * 30, // Vary the angle for each burst
+          spread: isLowEffects ? 45 : 70,
+          origin: {
+            x: x / window.innerWidth,
+            y: y / window.innerHeight
+          },
+          colors: palette,
+          gravity: isLowEffects ? 0.8 : 0.6,
+          drift: isLowEffects ? 0 : (Math.random() - 0.5) * 2,
+          scalar: isLowEffects ? 0.8 : 1,
+          ticks: isLowEffects ? 100 : 160,
+          shapes: ['square', 'circle'],
+          startVelocity: isLowEffects ? 25 : 35
+        });
+      }, i * 50);
     }
-    loop();
   }
 
-  function loop(){
-    if(rafId) return; // already running
-    const step = () => {
-      ctx.clearRect(0,0,canvas.width, canvas.height);
-      for(let i=confetti.length-1; i>=0; i--){
-        const p = confetti[i];
-        p.vx *= 0.995; // air drag
-        p.vy += p.g;   // gravity
-        p.x += p.vx;
-        p.y += p.vy;
-        p.angle += p.spin;
-        p.life -= 1;
+  function createChorusBurst() {
+    const cx = window.innerWidth * 0.5;
+    const cy = window.innerHeight * 0.45;
+    const isLowEffects = document.body.classList.contains('low-effects');
+    
+    // Multiple simultaneous bursts for chorus effect
+    const positions = [
+      { x: cx - 120, y: cy - 50 },
+      { x: cx, y: cy },
+      { x: cx + 120, y: cy + 50 }
+    ];
+    
+    positions.forEach((pos, i) => {
+      setTimeout(() => {
+        createConfettiBurst(pos.x, pos.y, isLowEffects ? 80 : 110);
+      }, i * 100);
+    });
+  }
 
-        // cull
-        if(p.life <= 0 || p.y > canvas.height + 40){
-          confetti.splice(i,1);
-          continue;
-        }
-
-        // draw
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.angle);
-        ctx.fillStyle = p.c;
-        const w = p.w * (0.5 + 0.5*Math.sin(p.life*0.2));
-        ctx.fillRect(-w/2, -p.h/2, w, p.h);
-        ctx.restore();
-      }
-      if(confetti.length === 0){
-        cancelAnimationFrame(rafId);
-        rafId = null;
-        return;
-      }
-      rafId = requestAnimationFrame(step);
+  function createFinalBurst() {
+    const cx = window.innerWidth * 0.5;
+    const cy = window.innerHeight * 0.55;
+    const isLowEffects = document.body.classList.contains('low-effects');
+    
+    // Spectacular finale burst
+    for (let i = 0; i < (isLowEffects ? 3 : 5); i++) {
+      setTimeout(() => {
+        const jx = cx + (Math.random() - 0.5) * 200;
+        const jy = cy + (Math.random() - 0.5) * 150;
+        createConfettiBurst(jx, jy, isLowEffects ? 70 : 100);
+      }, i * 80);
     }
-    rafId = requestAnimationFrame(step);
   }
 
   // Global click/tap handler -> randomize around pointer
-  function onTrigger(e){
+  function onTrigger(e) {
     const baseX = (e.touches?.[0]?.clientX ?? e.clientX ?? window.innerWidth/2);
     const baseY = (e.touches?.[0]?.clientY ?? e.clientY ?? window.innerHeight/2);
-    for(let i=0;i<3;i++){
-      const jitterX = baseX + rand(-80, 80);
-      const jitterY = baseY + rand(-60, 60);
-      spawnBurst(jitterX, jitterY, 80);
-    }
+    
+    createConfettiBurst(baseX, baseY, 80);
   }
 
   // Export for Blazor init and manual trigger
   window.CongratsFX = {
-    init: function(){
+    init: function() {
       document.addEventListener('click', onTrigger);
       document.addEventListener('touchstart', onTrigger, {passive: true});
     },
-    burstAt: spawnBurst,
-    playLyricsLoop: function(rootSelector, cycleMs, options){
+    burstAt: createConfettiBurst,
+    playLyricsLoop: function(rootSelector, cycleMs, options) {
       const root = document.querySelector(rootSelector || '.lyrics');
-      if(!root) return;
-      if(root.dataset.loopStarted === '1') return; // guard
+      if (!root) return;
+      if (root.dataset.loopStarted === '1') return; // guard
       root.dataset.loopStarted = '1';
 
-      const total = cycleMs || 14000; // slightly longer than last line delay
-      const congratsDelay = (options && options.congratsDelayMs) || 5800; // line 5 ~5.6s
-      const finalDelay = (options && options.finalDelayMs) || 12500; // line 9 timing
+      const total = cycleMs || 14000;
+      const congratsDelay = (options && options.congratsDelayMs) || 5800;
+      const finalDelay = (options && options.finalDelayMs) || 12500;
       
-      const chorusBurst = () => {
-        const cx = window.innerWidth * 0.5;
-        const cy = window.innerHeight * 0.45;
-        for(let i=0;i<3;i++){
-          const jx = cx + rand(-120, 120);
-          const jy = cy + rand(-80, 80);
-          spawnBurst(jx, jy, 110);
-        }
-      };
-      
-      const finalBurst = () => {
-        const cx = window.innerWidth * 0.5;
-        const cy = window.innerHeight * 0.55;
-        for(let i=0;i<4;i++){
-          const jx = cx + rand(-150, 150);
-          const jy = cy + rand(-100, 100);
-          spawnBurst(jx, jy, 90);
-        }
-      };
+      // Confetti timings for each line (matching CSS animation delays)
+      const lineConfettiDelays = [
+        500,   // line 1
+        2000,  // line 2  
+        3500,  // line 3
+        5000,  // line 4
+        6500,  // line 5 (Congratulations)
+        8000,  // line 6
+        9500,  // line 7
+        11000, // line 8
+        12500  // line 9 (Yeah, we made it)
+      ];
       
       const run = () => {
         // restart sequence by toggling class
@@ -146,10 +120,30 @@
         // force reflow to restart CSS animations
         void root.offsetWidth;
         root.classList.add('play');
-        // schedule synced confetti for "Congratulations" line
-        setTimeout(chorusBurst, congratsDelay);
-        // schedule confetti for final "Yeah, we made it" line
-        setTimeout(finalBurst, finalDelay);
+        
+        // Schedule confetti for each line
+        lineConfettiDelays.forEach((delay, index) => {
+          setTimeout(() => {
+            const lineNumber = index + 1;
+            const isImportantLine = lineNumber === 5 || lineNumber === 9; // Congratulations and finale
+            
+            if (isImportantLine) {
+              // Special burst for important lines
+              if (lineNumber === 5) {
+                createChorusBurst();
+              } else {
+                createFinalBurst();
+              }
+            } else {
+              // Small burst for regular lines
+              const cx = window.innerWidth * 0.5;
+              const cy = window.innerHeight * 0.4;
+              const jx = cx + (Math.random() - 0.5) * 300;
+              const jy = cy + (Math.random() - 0.5) * 200;
+              createConfettiBurst(jx, jy, 40); // Smaller burst for regular lines
+            }
+          }, delay);
+        });
       };
       run();
       setInterval(run, total);

@@ -1,4 +1,4 @@
-// Parallax sparkle layer with gentle twinkle
+// Optimized parallax sparkle layer with much better performance
 (function(){
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canvas = document.createElement('canvas');
@@ -27,59 +27,95 @@
   }
 
   function initStars(){
-    // Adjust star density based on effects mode
+    // Much more efficient star density calculation
     const isLowEffects = document.body.classList.contains('low-effects');
-    const baseDensity = isLowEffects ? 50000 : 12000; // Much fewer stars in low effects mode (roughly 1/4)
-    const count = Math.round((canvas.width * canvas.height) / baseDensity);
+    const isMaloneMode = document.body.classList.contains('malone-mode');
+    
+    let baseDensity, maxStars;
+    if (isLowEffects) {
+      baseDensity = 80000;
+      maxStars = 100;
+    } else if (isMaloneMode) {
+      baseDensity = 12000; // More stars for Malone mode
+      maxStars = 400;
+    } else {
+      baseDensity = 15000;
+      maxStars = 300;
+    }
+    
+    const count = Math.min(Math.round((canvas.width * canvas.height) / baseDensity), maxStars);
     
     stars = new Array(count).fill(0).map(() => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      r: Math.random() * 1.6 + 0.4,
+      r: isMaloneMode ? Math.random() * 1.8 + 0.4 : Math.random() * 1.2 + 0.3, // Bigger stars in Malone mode
       a: Math.random() * Math.PI * 2,
-      s: isLowEffects ? Math.random() * 0.005 + 0.002 : Math.random() * 0.015 + 0.005, // slower twinkle speed in low effects
-      l: Math.random() * 0.6 + 0.2, // base lightness
-      d: Math.random() * 0.6 + 0.4 // depth for parallax
+      s: isLowEffects ? Math.random() * 0.003 + 0.001 : 
+          isMaloneMode ? Math.random() * 0.02 + 0.005 : // Faster twinkle in Malone mode
+          Math.random() * 0.01 + 0.003,
+      l: Math.random() * 0.4 + 0.3, // Base lightness
+      d: Math.random() * 0.5 + 0.5 // Depth for parallax
     }));
   }
 
   function draw(){
-    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // ease parallax toward target
     const isLowEffects = document.body.classList.contains('low-effects');
-    const parallaxStrength = isLowEffects ? 0.01 : 0.05; // Much less parallax in low effects
+    const isMaloneMode = document.body.classList.contains('malone-mode');
+    const parallaxStrength = isLowEffects ? 0.005 : 0.02; // Much less parallax movement
     parallax.x += (target.x - parallax.x) * parallaxStrength;
     parallax.y += (target.y - parallax.y) * parallaxStrength;
 
-    for(const st of stars){
-      st.a += st.s;
-      const tw = (Math.sin(st.a) + 1) * 0.5; // 0..1
-      const parallaxDistance = isLowEffects ? 2 : 10; // Much less parallax distance in low effects
-      const px = st.x + parallax.x * (1 - st.d) * parallaxDistance; // farther stars move less
-      const py = st.y + parallax.y * (1 - st.d) * parallaxDistance;
+    // Different rendering for Malone mode
+    if (isMaloneMode) {
+      // Colorful sparkles for Malone mode
+      const colors = [
+        'rgba(255,107,107,', // Red
+        'rgba(78,205,196,',  // Cyan
+        'rgba(69,183,209,',  // Blue
+        'rgba(253,121,168,', // Pink
+        'rgba(255,235,59,',  // Yellow
+        'rgba(150,206,180,', // Green
+      ];
+      
+      for(const st of stars){
+        st.a += st.s;
+        const tw = (Math.sin(st.a) + 1) * 0.5; // 0..1
+        const parallaxDistance = 3;
+        const px = st.x + parallax.x * (1 - st.d) * parallaxDistance;
+        const py = st.y + parallax.y * (1 - st.d) * parallaxDistance;
 
-      // Adjust glow intensity based on mode
-      const glowIntensity = isLowEffects ? 0.1 : 0.35; // Much less glow in low effects
-      const coreIntensity = isLowEffects ? 0.3 : 0.8; // Dimmer core in low effects
-
-      // soft glow (skip in low effects mode for better performance)
-      if (!isLowEffects) {
-        const grd = ctx.createRadialGradient(px, py, 0, px, py, st.r * 6);
-        grd.addColorStop(0, `rgba(255,255,255,${glowIntensity * tw + 0.05})`);
-        grd.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = grd;
+        // Use colorful sparkles
+        const colorIndex = Math.floor((st.x + st.y) * 0.01) % colors.length;
+        const alpha = tw * 0.8 + 0.3;
+        ctx.fillStyle = colors[colorIndex] + alpha + ')';
+        
         ctx.beginPath();
-        ctx.arc(px, py, st.r * 6, 0, Math.PI*2);
+        ctx.arc(px, py, st.r, 0, Math.PI * 2);
         ctx.fill();
       }
+    } else {
+      // Standard white sparkles for low effects
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      
+      for(const st of stars){
+        st.a += st.s;
+        const tw = (Math.sin(st.a) + 1) * 0.5; // 0..1
+        const parallaxDistance = isLowEffects ? 1 : 3;
+        const px = st.x + parallax.x * (1 - st.d) * parallaxDistance;
+        const py = st.y + parallax.y * (1 - st.d) * parallaxDistance;
 
-      // core
-      ctx.fillStyle = `rgba(255,255,255,${coreIntensity * tw + 0.2})`;
-      ctx.beginPath();
-      ctx.arc(px, py, st.r, 0, Math.PI*2);
-      ctx.fill();
+        const alpha = isLowEffects ? tw * 0.4 + 0.1 : tw * 0.7 + 0.2;
+        ctx.globalAlpha = alpha;
+        
+        ctx.beginPath();
+        ctx.arc(px, py, st.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
+    
+    ctx.globalAlpha = 1; // Reset alpha
   }
 
   function loop(){
