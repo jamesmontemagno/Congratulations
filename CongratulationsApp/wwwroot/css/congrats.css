@@ -8,50 +8,93 @@
   --ac2: #af00ff;
   --ac3: #00d4ff;
   --text: #f5f7ff;
+  --trip1: #ff0080;
+  --trip2: #00ff80;
+  --trip3: #8000ff;
+  --trip4: #ff8000;
 }
 
-/* Full-viewport animated gradient */
+/* Trippy animated background */
 body {
-  background: linear-gradient(120deg, var(--bg1), var(--bg2) 40%, var(--bg3));
-  background-size: 220% 220%;
-  animation: bgShift 16s ease-in-out infinite, pulseGlow 12s ease-in-out infinite;
+  background: 
+    linear-gradient(45deg, var(--trip1), transparent 30%, var(--trip2) 60%, transparent),
+    linear-gradient(135deg, var(--trip3), transparent 40%, var(--trip4) 70%, transparent),
+    linear-gradient(225deg, var(--bg1), var(--bg2) 30%, var(--bg3) 60%, var(--ac1)),
+    radial-gradient(circle at 20% 80%, var(--ac2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--ac3) 0%, transparent 50%);
+  background-size: 400% 400%, 300% 300%, 250% 250%, 200% 200%, 200% 200%;
+  animation: 
+    trippyShift1 8s ease-in-out infinite,
+    trippyShift2 12s ease-in-out infinite reverse,
+    colorCycle 15s linear infinite,
+    pulseIntense 6s ease-in-out infinite;
   color: var(--text);
   overflow-x: hidden;
 }
 
-@keyframes bgShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes trippyShift1 {
+  0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%, 0% 100%, 100% 0%; }
+  25% { background-position: 100% 0%, 0% 100%, 0% 0%, 50% 50%, 50% 50%; }
+  50% { background-position: 100% 100%, 0% 0%, 100% 0%, 100% 0%, 0% 100%; }
+  75% { background-position: 0% 100%, 100% 0%, 50% 100%, 0% 50%, 100% 50%; }
 }
 
-/* Soft radial vignette */
+@keyframes trippyShift2 {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  33% { transform: rotate(120deg) scale(1.1); }
+  66% { transform: rotate(240deg) scale(0.9); }
+}
+
+@keyframes colorCycle {
+  0% { filter: hue-rotate(0deg) saturate(1) brightness(1); }
+  25% { filter: hue-rotate(90deg) saturate(1.3) brightness(1.1); }
+  50% { filter: hue-rotate(180deg) saturate(1.6) brightness(0.9); }
+  75% { filter: hue-rotate(270deg) saturate(1.2) brightness(1.2); }
+  100% { filter: hue-rotate(360deg) saturate(1) brightness(1); }
+}
+
+@keyframes pulseIntense {
+  0%, 100% { 
+    box-shadow: inset 0 0 100px rgba(255,122,24,0.1), inset 0 0 200px rgba(175,0,255,0.05);
+  }
+  50% { 
+    box-shadow: inset 0 0 200px rgba(0,212,255,0.2), inset 0 0 400px rgba(255,122,24,0.1);
+  }
+}
+
+/* Psychedelic overlay layers */
 body::before {
-  content: "";
-  position: fixed;
-  inset: -20vmax;
-  background:
-    radial-gradient(60vmax 60vmax at 20% 10%, rgba(255,122,24,0.18), transparent 60%),
-    radial-gradient(40vmax 40vmax at 80% 90%, rgba(0,212,255,0.18), transparent 60%),
-    radial-gradient(70vmax 70vmax at 90% 20%, rgba(175,0,255,0.18), transparent 60%);
-  filter: blur(30px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Aurora swirl overlay */
-body::after {
   content: "";
   position: fixed;
   inset: -30vmax;
   background:
-    conic-gradient(from 0deg at 30% 40%, rgba(255,122,24,0.05), transparent 35%, rgba(175,0,255,0.06) 55%, transparent 75%, rgba(0,212,255,0.06) 90%, transparent),
-    conic-gradient(from 180deg at 70% 60%, rgba(0,212,255,0.05), transparent 45%, rgba(255,122,24,0.06) 65%, transparent 85%);
-  filter: blur(20px) saturate(120%);
-  mix-blend-mode: screen;
+    radial-gradient(ellipse 80vmax 40vmax at 10% 20%, rgba(255,0,128,0.15), transparent 60%),
+    radial-gradient(ellipse 60vmax 80vmax at 90% 80%, rgba(0,255,128,0.12), transparent 60%),
+    radial-gradient(ellipse 70vmax 50vmax at 50% 10%, rgba(128,0,255,0.18), transparent 60%),
+    conic-gradient(from 0deg at 30% 70%, rgba(255,128,0,0.1), transparent 30%, rgba(0,128,255,0.1) 60%, transparent);
+  filter: blur(40px);
+  animation: psychedelicFloat 20s ease-in-out infinite, trippyRotate 25s linear infinite;
   pointer-events: none;
   z-index: 0;
-  animation: auroraRotate 60s linear infinite;
+}
+
+/* Intense aurora swirl overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -40vmax;
+  background:
+    conic-gradient(from 45deg at 25% 25%, rgba(255,0,255,0.08), transparent 20%, rgba(0,255,255,0.1) 40%, transparent 60%, rgba(255,255,0,0.06) 80%, transparent),
+    conic-gradient(from 225deg at 75% 75%, rgba(255,64,0,0.08), transparent 30%, rgba(64,0,255,0.1) 50%, transparent 70%, rgba(0,255,64,0.08) 90%, transparent),
+    radial-gradient(ellipse 120vmax 60vmax at 60% 40%, rgba(255,20,147,0.06), transparent 50%);
+  filter: blur(30px) saturate(150%);
+  mix-blend-mode: screen;
+  animation: 
+    auroraRotate 45s linear infinite, 
+    auroraFloat 18s ease-in-out infinite,
+    intensePulse 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Stage centers lyrics with plenty of air */
@@ -196,9 +239,96 @@ body::after {
   z-index: 2;
 }
 
+/* Floating emoji background */
+.floating-emoji {
+  position: fixed;
+  font-size: clamp(2rem, 4vw, 4rem);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 1;
+  animation: floatDrift 15s ease-in-out infinite;
+}
+
+.floating-emoji:nth-child(odd) {
+  animation-direction: reverse;
+  animation-duration: 18s;
+}
+
+.floating-emoji.ring-1 {
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.floating-emoji.champagne-1 {
+  top: 20%;
+  right: 10%;
+  animation-delay: -3s;
+}
+
+.floating-emoji.trophy-1 {
+  top: 60%;
+  left: 15%;
+  animation-delay: -6s;
+}
+
+.floating-emoji.party-1 {
+  top: 40%;
+  right: 20%;
+  animation-delay: -9s;
+}
+
+.floating-emoji.crown-1 {
+  top: 80%;
+  left: 80%;
+  animation-delay: -12s;
+}
+
+.floating-emoji.ring-2 {
+  top: 30%;
+  left: 70%;
+  animation-delay: -2s;
+  animation-duration: 20s;
+}
+
+.floating-emoji.champagne-2 {
+  top: 70%;
+  right: 5%;
+  animation-delay: -5s;
+  animation-duration: 16s;
+}
+
+.floating-emoji.trophy-2 {
+  top: 15%;
+  left: 40%;
+  animation-delay: -8s;
+  animation-duration: 22s;
+}
+
+.floating-emoji.party-2 {
+  top: 85%;
+  right: 40%;
+  animation-delay: -11s;
+  animation-duration: 14s;
+}
+
+.floating-emoji.crown-2 {
+  top: 50%;
+  left: 10%;
+  animation-delay: -14s;
+  animation-duration: 19s;
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  body { animation: none; }
+  body { 
+    animation: none; 
+    background: linear-gradient(120deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+  }
+  body::before, body::after { 
+    animation: none; 
+    opacity: 0.3;
+  }
   .line { 
     animation: none !important; 
     opacity: 1; 
@@ -206,13 +336,58 @@ body::after {
     filter: none; 
   }
   .line .ink { animation: none; }
-  .shimmer::after { display: none; }
+  .floating-emoji { 
+    animation: none; 
+    opacity: 0.05; 
+  }
 }
 
-/* Extra keyframes */
+/* Extra keyframes for trippy effects */
+@keyframes floatDrift {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg) scale(1); 
+    opacity: 0.1; 
+  }
+  25% { 
+    transform: translate(30px, -20px) rotate(5deg) scale(1.1); 
+    opacity: 0.2; 
+  }
+  50% { 
+    transform: translate(-20px, 15px) rotate(-3deg) scale(0.9); 
+    opacity: 0.15; 
+  }
+  75% { 
+    transform: translate(15px, -25px) rotate(8deg) scale(1.05); 
+    opacity: 0.25; 
+  }
+}
+
+@keyframes psychedelicFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  25% { transform: translate(20px, -30px) rotate(90deg) scale(1.1); }
+  50% { transform: translate(-15px, 20px) rotate(180deg) scale(0.9); }
+  75% { transform: translate(-25px, -10px) rotate(270deg) scale(1.05); }
+}
+
+@keyframes trippyRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(360deg) scale(1.02); }
+}
+
+@keyframes auroraFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-20px, 15px) scale(1.05); }
+  66% { transform: translate(25px, -20px) scale(0.95); }
+}
+
+@keyframes intensePulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1.2; }
+}
+
 @keyframes auroraRotate {
   0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.05); }
+  50% { transform: rotate(180deg) scale(1.08); }
   100% { transform: rotate(360deg) scale(1); }
 }
 
