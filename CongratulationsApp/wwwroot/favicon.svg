@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ff7a18"/>
+      <stop offset="50%" stop-color="#af00ff"/>
+      <stop offset="100%" stop-color="#00d4ff"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#g1)"/>
+  
+  <!-- Confetti burst stylized C -->
+  <g transform="translate(32,32)">
+    <path d="M12,-6 A14,14 0 1 0 12,6" fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="16" cy="-10" r="2.8" fill="#ffd166"/>
+    <circle cx="-6" cy="-14" r="2.2" fill="#06d6a0"/>
+    <circle cx="-10" cy="6" r="2.4" fill="#ef476f"/>
+    <circle cx="8" cy="12" r="2.2" fill="#118ab2"/>
+  </g>
+
+  <!-- Soft glow -->
+  <circle cx="32" cy="32" r="26" fill="url(#glow)" filter="url(#soft)"/>
+</svg>

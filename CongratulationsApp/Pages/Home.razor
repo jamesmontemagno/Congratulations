@@ -1,0 +1,37 @@
+﻿@page "/"
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<PageTitle>Congratulations</PageTitle>
+
+<section class="lyrics-stage">
+	<div class="lyrics">
+		<p class="line"><span class="ink">My momma called, see you on TV, son</span></p>
+		<p class="line"><span class="ink">Said shit done changed ever since we was on</span></p>
+		<p class="line"><span class="ink">I dreamed it all ever since I was young</span></p>
+		<p class="line"><span class="ink">They said I would be nothing</span></p>
+		<p class="line big loud shimmer"><span class="ink">Now they always say, Congratulations</span></p>
+		<p class="line"><span class="ink">Worked so hard, forgot how to vacation</span></p>
+		<p class="line"><span class="ink">They ain't never had the dedication</span></p>
+		<p class="line"><span class="ink">People hatin', say we changed and, look, we made it</span></p>
+		<p class="line big loud shimmer"><span class="ink">Yeah, we made it</span></p>
+
+		<div class="hint">Click or tap anywhere for confetti ✨</div>
+	</div>
+</section>
+
+@code {
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			try
+			{
+				await JS.InvokeVoidAsync("CongratsFX.init");
+				// Kick off looping animations of lyrics with longer cycle for dramatic timing
+				await JS.InvokeVoidAsync("CongratsFX.playLyricsLoop", ".lyrics", 18000, new { congratsDelayMs = 6200 });
+			}
+			catch { /* no-op */ }
+		}
+	}
+}

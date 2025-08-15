@@ -1,0 +1,222 @@
+/* Animated gradient background and lyric effects */
+
+:root {
+  --bg1: #0f1027;
+  --bg2: #1b1c47;
+  --bg3: #2a1b4a;
+  --ac1: #ff7a18;
+  --ac2: #af00ff;
+  --ac3: #00d4ff;
+  --text: #f5f7ff;
+}
+
+/* Full-viewport animated gradient */
+body {
+  background: linear-gradient(120deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+  background-size: 220% 220%;
+  animation: bgShift 16s ease-in-out infinite, pulseGlow 12s ease-in-out infinite;
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Soft radial vignette */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20vmax;
+  background:
+    radial-gradient(60vmax 60vmax at 20% 10%, rgba(255,122,24,0.18), transparent 60%),
+    radial-gradient(40vmax 40vmax at 80% 90%, rgba(0,212,255,0.18), transparent 60%),
+    radial-gradient(70vmax 70vmax at 90% 20%, rgba(175,0,255,0.18), transparent 60%);
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Aurora swirl overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -30vmax;
+  background:
+    conic-gradient(from 0deg at 30% 40%, rgba(255,122,24,0.05), transparent 35%, rgba(175,0,255,0.06) 55%, transparent 75%, rgba(0,212,255,0.06) 90%, transparent),
+    conic-gradient(from 180deg at 70% 60%, rgba(0,212,255,0.05), transparent 45%, rgba(255,122,24,0.06) 65%, transparent 85%);
+  filter: blur(20px) saturate(120%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 0;
+  animation: auroraRotate 60s linear infinite;
+}
+
+/* Stage centers lyrics with plenty of air */
+.lyrics-stage {
+  position: relative;
+  min-height: calc(100svh - 4rem);
+  display: grid;
+  place-items: center;
+  padding: 6rem 1.25rem 4rem;
+  z-index: 1;
+}
+
+.lyrics {
+  max-width: 1200px;
+  width: min(92vw, 1200px);
+}
+
+/* Each line animates in sequence */
+.line {
+  font-size: clamp(1.25rem, 2.2vw + 1rem, 3rem);
+  line-height: 1.25;
+  margin: 0.45em 0;
+  opacity: 0;
+  transform: translateY(40px) scale(0.85);
+  filter: blur(8px) brightness(0.3);
+  will-change: transform, opacity, filter;
+  letter-spacing: 0.02em;
+}
+
+/* Only animate when play class is active */
+.lyrics.play .line {
+  animation: dramaticReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Ensure lines stay hidden when not playing */
+.lyrics:not(.play) .line {
+  opacity: 0;
+  transform: translateY(40px) scale(0.85);
+  filter: blur(8px) brightness(0.3);
+}
+
+/* Gradient ink + glow */
+.line .ink {
+  background: linear-gradient(90deg, var(--ac1), var(--ac2), var(--ac3));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow:
+    0 0 10px rgba(255,122,24,0.15),
+    0 0 24px rgba(0,212,255,0.12);
+  animation: inkShift 8s ease-in-out infinite;
+}
+
+@keyframes inkShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes dramaticReveal {
+  0% { 
+    opacity: 0; 
+    transform: translateY(50px) scale(0.8); 
+    filter: blur(12px) brightness(0.2);
+  }
+  20% {
+    opacity: 0.3;
+    transform: translateY(30px) scale(0.9);
+    filter: blur(6px) brightness(0.6);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateY(8px) scale(0.98);
+    filter: blur(2px) brightness(0.9);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+    filter: blur(0) brightness(1);
+  }
+}
+
+/* Subtle shimmer sweep on important lines */
+.shimmer {
+  position: relative;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.15) 15%, transparent 30%);
+  transform: translateX(-130%);
+  animation: sweep 3.8s ease-in-out infinite 1s;
+  pointer-events: none;
+}
+@keyframes sweep {
+  0%, 45% { transform: translateX(-130%); }
+  60% { transform: translateX(130%); }
+  100% { transform: translateX(130%); }
+}
+
+/* Timed delays for each line - sequential with clear gaps */
+.line:nth-child(1) { animation-delay: 0.5s; }
+.line:nth-child(2) { animation-delay: 2.0s; }
+.line:nth-child(3) { animation-delay: 3.5s; }
+.line:nth-child(4) { animation-delay: 5.0s; }
+.line:nth-child(5) { animation-delay: 6.5s; }
+.line:nth-child(6) { animation-delay: 8.0s; }
+.line:nth-child(7) { animation-delay: 9.5s; }
+.line:nth-child(8) { animation-delay: 11.0s; }
+.line:nth-child(9) { animation-delay: 12.5s; }
+
+/* Emphasis sizes */
+.big { font-size: clamp(1.8rem, 3vw + 1rem, 4rem); }
+.loud { font-weight: 800; letter-spacing: 0.015em; }
+
+/* Footer nudge */
+.hint {
+  margin-top: 2.25rem;
+  opacity: 0.75;
+  font-size: 0.95rem;
+}
+
+/* Confetti canvas overlay */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Sparkle canvas sits behind confetti but above vignette */
+#sparkle-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
+  .line { 
+    animation: none !important; 
+    opacity: 1; 
+    transform: none; 
+    filter: none; 
+  }
+  .line .ink { animation: none; }
+  .shimmer::after { display: none; }
+}
+
+/* Extra keyframes */
+@keyframes auroraRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { filter: brightness(1) contrast(1) saturate(1); }
+  50% { filter: brightness(1.08) contrast(1.06) saturate(1.1); }
+}
