@@ -4,6 +4,20 @@
 
 <PageTitle>Congratulations</PageTitle>
 
+<!-- Mode Toggle -->
+<div class="mode-toggle">
+	<button @onclick="ToggleMaloneMode" class="malone-toggle @(isMaloneMode ? "active" : "")">
+		@if (isMaloneMode)
+		{
+			<span>✨ Low Effects</span>
+		}
+		else
+		{
+			<span>🌟 Malone Mode</span>
+		}
+	</button>
+</div>
+
 <section class="lyrics-stage">
 	<div class="lyrics">
 		<p class="line line-1"><span class="ink">My momma called, see you on TV, son</span></p>
@@ -27,12 +41,17 @@
 </section>
 
 @code {
+	private bool isMaloneMode = false;
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
 			try
 			{
+				// Set initial mode class
+				await JS.InvokeVoidAsync("document.body.classList.add", "low-effects");
+				
 				await JS.InvokeVoidAsync("CongratsFX.init");
 				// Kick off looping animations of lyrics with longer cycle for dramatic timing
 				await JS.InvokeVoidAsync("CongratsFX.playLyricsLoop", ".lyrics", 18000, new { 
@@ -42,5 +61,28 @@
 			}
 			catch { /* no-op */ }
 		}
+	}
+
+	private async Task ToggleMaloneMode()
+	{
+		isMaloneMode = !isMaloneMode;
+		
+		try
+		{
+			if (isMaloneMode)
+			{
+				await JS.InvokeVoidAsync("document.body.classList.remove", "low-effects");
+				await JS.InvokeVoidAsync("document.body.classList.add", "malone-mode");
+			}
+			else
+			{
+				await JS.InvokeVoidAsync("document.body.classList.remove", "malone-mode");
+				await JS.InvokeVoidAsync("document.body.classList.add", "low-effects");
+			}
+			
+			// Re-initialize sparkles for new mode
+			await JS.InvokeVoidAsync("window.sparklesOnModeChange");
+		}
+		catch { /* no-op */ }
 	}
 }
