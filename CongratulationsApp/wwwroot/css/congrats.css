@@ -155,15 +155,15 @@ body::after {
 }
 
 /* Timed delays for each line - sequential with clear gaps */
-.line:nth-child(1) { animation-delay: 0.5s; }
-.line:nth-child(2) { animation-delay: 2.0s; }
-.line:nth-child(3) { animation-delay: 3.5s; }
-.line:nth-child(4) { animation-delay: 5.0s; }
-.line:nth-child(5) { animation-delay: 6.5s; }
-.line:nth-child(6) { animation-delay: 8.0s; }
-.line:nth-child(7) { animation-delay: 9.5s; }
-.line:nth-child(8) { animation-delay: 11.0s; }
-.line:nth-child(9) { animation-delay: 12.5s; }
+.lyrics.play .line-1 { animation-delay: 0.5s; }
+.lyrics.play .line-2 { animation-delay: 2.0s; }
+.lyrics.play .line-3 { animation-delay: 3.5s; }
+.lyrics.play .line-4 { animation-delay: 5.0s; }
+.lyrics.play .line-5 { animation-delay: 6.5s; }
+.lyrics.play .line-6 { animation-delay: 8.0s; }
+.lyrics.play .line-7 { animation-delay: 9.5s; }
+.lyrics.play .line-8 { animation-delay: 11.0s; }
+.lyrics.play .line-9 { animation-delay: 12.5s; }
 
 /* Emphasis sizes */
 .big { font-size: clamp(1.8rem, 3vw + 1rem, 4rem); }
