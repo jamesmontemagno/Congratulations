@@ -117,35 +117,18 @@ body.malone-mode .line:hover {
   filter: blur(8px) brightness(0.3);
 }
 
-/* Fun gradient text effects - readable and vibrant */
+/* Simple solid white text - no glow effects */
 .line .ink {
-  background: linear-gradient(45deg, #ffffff, #f0f8ff, #ffffff, #fff5ee);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: white;
   font-weight: 600;
-  animation: subtleGradientFlow 4s ease-in-out infinite;
+  /* Remove all glow effects for performance */
 }
 
-/* Subtle gradient animation for readability */
-@keyframes subtleGradientFlow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* Special effects for emphasized lines */
+/* Special effects for emphasized lines - just scaling */
 .line.big .ink {
-  background: linear-gradient(45deg, #ffffff, #ffeb3b, #ffffff, #81c784, #ffffff);
-  background-size: 300% 300%;
-  animation: 
-    colorfulGradientFlow 3s ease-in-out infinite,
-    gentleScale 4s ease-in-out infinite;
-}
-
-@keyframes colorfulGradientFlow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  color: white;
+  font-weight: 600;
+  animation: gentleScale 4s ease-in-out infinite;
 }
 
 @keyframes gentleScale {
@@ -153,23 +136,23 @@ body.malone-mode .line:hover {
   50% { transform: scale(1.02); }
 }
 
-/* Enhanced shimmer effect - applied to text, not background */
+/* Shimmer effect - solid white text, no glow */
 .shimmer .ink {
   position: relative;
-  background: linear-gradient(45deg, #ffffff, #ffeb3b, #ffffff, #81c784, #ffffff, #e1bee7, #ffffff);
-  background-size: 400% 400%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: 
-    shimmerTextFlow 3s ease-in-out infinite,
-    gentleScale 4s ease-in-out infinite;
+  color: white !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  animation: gentleScale 4s ease-in-out infinite;
 }
 
-@keyframes shimmerTextFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Override for big lines */
+.line.big.shimmer .ink {
+  color: white !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  animation: gentleScale 4s ease-in-out infinite;
 }
 
 /* Remove the old shimmer overlay */
@@ -418,27 +401,23 @@ body.low-effects .line {
   animation-duration: 1.5s !important;
 }
 
-/* Low effects mode - simple but nice gradients */
+/* Low effects mode - simple solid white text, no effects */
 body.low-effects .line .ink {
-  background: linear-gradient(45deg, #ffffff, #f8f9fa, #ffffff) !important;
-  background-size: 200% 200% !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
+  color: white !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
   font-weight: 600 !important;
-  animation: gentleGradientShift 8s ease-in-out infinite !important;
+  /* No glow effects for performance */
 }
 
 body.low-effects .line.big .ink {
-  background: linear-gradient(45deg, #ffffff, #e3f2fd, #ffffff, #f3e5f5, #ffffff) !important;
-  animation: 
-    gentleGradientShift 8s ease-in-out infinite,
-    gentleScale 4s ease-in-out infinite !important;
-}
-
-@keyframes gentleGradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  color: white !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  font-weight: 600 !important;
+  animation: gentleScale 4s ease-in-out infinite !important;
 }
 
 body.low-effects .shimmer::after {
@@ -446,86 +425,84 @@ body.low-effects .shimmer::after {
   display: none !important;
 }
 
-/* Malone mode gets AMPLIFIED background effects */
+/* Malone mode gets SUPER COLORFUL background effects */
 body.malone-mode {
   background: 
-    linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 40%, var(--bg3) 100%),
-    radial-gradient(circle at 25% 75%, var(--ac2) 0%, transparent 40%),
-    radial-gradient(circle at 75% 25%, var(--ac3) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, var(--ac1) 0%, transparent 60%);
-  background-size: 300% 300%, 200% 200%, 200% 200%, 400% 400%;
+    linear-gradient(135deg, #ff0080 0%, #8000ff 25%, #00ff80 50%, #ff8000 75%, #00ffff 100%),
+    radial-gradient(circle at 25% 75%, #ff6b6b 0%, transparent 40%),
+    radial-gradient(circle at 75% 25%, #4ecdc4 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, #ffeaa7 0%, transparent 60%),
+    radial-gradient(circle at 20% 20%, #fd79a8 0%, transparent 30%),
+    radial-gradient(circle at 80% 80%, #96ceb4 0%, transparent 35%);
+  background-size: 400% 400%, 250% 250%, 250% 250%, 500% 500%, 200% 200%, 300% 300%;
   animation: 
-    intenseBackgroundShift 6s ease-in-out infinite,
-    fastColorCycle 10s linear infinite,
-    backgroundPulse 4s ease-in-out infinite;
+    superColorfulShift 4s ease-in-out infinite,
+    rainbowColorCycle 6s linear infinite,
+    backgroundPulse 3s ease-in-out infinite;
 }
 
 body.malone-mode::before {
-  animation-duration: 10s; /* Much faster starfield */
-  opacity: 1.5;
+  animation-duration: 8s; /* Much faster starfield */
+  opacity: 1.8;
   background:
     radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,1), transparent),
-    radial-gradient(1px 1px at 40% 70%, rgba(255,107,107,0.8), transparent),
-    radial-gradient(1px 1px at 90% 40%, rgba(78,205,196,0.6), transparent),
-    radial-gradient(2px 2px at 10% 80%, rgba(253,121,168,0.8), transparent),
-    radial-gradient(1px 1px at 70% 10%, rgba(255,235,59,0.7), transparent),
-    radial-gradient(1px 1px at 60% 90%, rgba(69,183,209,0.6), transparent);
-  background-size: 150px 150px, 120px 120px, 80px 80px, 140px 140px, 100px 100px, 130px 130px;
+    radial-gradient(1px 1px at 40% 70%, rgba(255,107,107,1), transparent),
+    radial-gradient(1px 1px at 90% 40%, rgba(78,205,196,0.8), transparent),
+    radial-gradient(2px 2px at 10% 80%, rgba(253,121,168,1), transparent),
+    radial-gradient(1px 1px at 70% 10%, rgba(255,235,59,0.9), transparent),
+    radial-gradient(1px 1px at 60% 90%, rgba(69,183,209,0.8), transparent),
+    radial-gradient(1px 1px at 30% 50%, rgba(150,206,180,0.7), transparent);
+  background-size: 120px 120px, 100px 100px, 70px 70px, 110px 110px, 80px 80px, 100px 100px, 90px 90px;
 }
 
-@keyframes intenseBackgroundShift {
-  0%, 100% { background-position: 0% 0%, 0% 100%, 100% 0%, 50% 50%; }
-  25% { background-position: 50% 50%, 100% 0%, 0% 100%, 0% 0%; }
-  50% { background-position: 100% 100%, 100% 100%, 100% 100%, 100% 100%; }
-  75% { background-position: 50% 0%, 0% 50%, 50% 100%, 100% 50%; }
+@keyframes superColorfulShift {
+  0%, 100% { background-position: 0% 0%, 0% 100%, 100% 0%, 50% 50%, 25% 75%, 75% 25%; }
+  25% { background-position: 50% 50%, 100% 0%, 0% 100%, 0% 0%, 75% 25%, 25% 75%; }
+  50% { background-position: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 0%, 0% 100%; }
+  75% { background-position: 50% 0%, 0% 50%, 50% 100%, 100% 50%, 0% 50%, 50% 0%; }
 }
 
-@keyframes fastColorCycle {
-  0% { filter: hue-rotate(0deg) saturate(1.2) brightness(1.1); }
-  25% { filter: hue-rotate(90deg) saturate(1.4) brightness(1.2); }
-  50% { filter: hue-rotate(180deg) saturate(1.6) brightness(1); }
-  75% { filter: hue-rotate(270deg) saturate(1.3) brightness(1.3); }
-  100% { filter: hue-rotate(360deg) saturate(1.2) brightness(1.1); }
+@keyframes rainbowColorCycle {
+  0% { filter: hue-rotate(0deg) saturate(1.4) brightness(1.2); }
+  20% { filter: hue-rotate(72deg) saturate(1.6) brightness(1.3); }
+  40% { filter: hue-rotate(144deg) saturate(1.8) brightness(1.1); }
+  60% { filter: hue-rotate(216deg) saturate(1.5) brightness(1.4); }
+  80% { filter: hue-rotate(288deg) saturate(1.7) brightness(1.2); }
+  100% { filter: hue-rotate(360deg) saturate(1.4) brightness(1.2); }
 }
 
 @keyframes backgroundPulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
+  50% { transform: scale(1.03); }
 }
 
-/* VIBRANT text effects for Malone mode! */
+/* Simple gradient text for Malone mode - faster animations */
 body.malone-mode .line .ink {
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8, #fdcb6e);
-  background-size: 400% 400%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
   animation: 
-    rainbowFlow 2s linear infinite,
+    maloneGradientFlow 1.5s ease-in-out infinite,
     subtleBounce 3s ease-in-out infinite;
 }
 
 body.malone-mode .line.big .ink {
-  background: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff8000, #ff0080, #00ffff, #ffff00);
-  background-size: 500% 500%;
+  background: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff8000, #00ffff, #ffff00) !important;
+  background-size: 400% 400% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
   animation: 
-    psychedelicFlow 1.5s linear infinite,
+    maloneGradientFlow 1s ease-in-out infinite,
     funkyBounce 2s ease-in-out infinite;
 }
 
-/* Rainbow gradient animation for Malone mode */
-@keyframes rainbowFlow {
-  0% { background-position: 0% 50%; }
+/* Simple gradient flow animation for Malone mode */
+@keyframes maloneGradientFlow {
+  0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes psychedelicFlow {
-  0% { background-position: 0% 50%; }
-  25% { background-position: 100% 0%; }
-  50% { background-position: 100% 100%; }
-  75% { background-position: 0% 100%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* Fun bounce effects */
@@ -541,19 +518,31 @@ body.malone-mode .line.big .ink {
   75% { transform: translateY(-3px) scale(1.02) rotate(-0.5deg); }
 }
 
-/* Enhanced shimmer for Malone mode - on text gradient */
+/* Shimmer for Malone mode - faster enhanced gradient */
 body.malone-mode .shimmer .ink {
-  background: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff8000, #ffff00, #ff0080, #00ffff, #ff0080);
-  background-size: 600% 600%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  background: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff8000, #ffff00, #ff0080) !important;
+  background-size: 500% 500% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
   animation: 
-    psychedelicTextFlow 2s linear infinite,
-    funkyBounce 2s ease-in-out infinite;
+    maloneShimmerFlow 1s linear infinite,
+    funkyBounce 2s ease-in-out infinite !important;
 }
 
-@keyframes psychedelicTextFlow {
+/* Override for big shimmer lines in Malone mode */
+body.malone-mode .line.big.shimmer .ink {
+  background: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff8000, #ffff00, #00ffff, #ff0080) !important;
+  background-size: 600% 600% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  animation: 
+    maloneShimmerFlow 0.8s linear infinite,
+    funkyBounce 2s ease-in-out infinite !important;
+}
+
+@keyframes maloneShimmerFlow {
   0% { background-position: 0% 50%; }
   25% { background-position: 100% 0%; }
   50% { background-position: 100% 100%; }
