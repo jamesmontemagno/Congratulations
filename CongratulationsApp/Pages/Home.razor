@@ -18,7 +18,10 @@
 
 		<div class="hint">Click or tap anywhere for confetti ✨</div>
 		<div class="github-link">
-			<a href="https://github.com/jamesmontemagno/congratulations" target="_blank" rel="noopener">⭐</a>
+			<a href="https://github.com/jamesmontemagno/congratulations" target="_blank" rel="noopener">
+				<span class="github-icon">⭐</span>
+				<span class="github-text">View on GitHub</span>
+			</a>
 		</div>
 	</div>
 </section>
@@ -32,7 +35,10 @@
 			{
 				await JS.InvokeVoidAsync("CongratsFX.init");
 				// Kick off looping animations of lyrics with longer cycle for dramatic timing
-				await JS.InvokeVoidAsync("CongratsFX.playLyricsLoop", ".lyrics", 18000, new { congratsDelayMs = 6200 });
+				await JS.InvokeVoidAsync("CongratsFX.playLyricsLoop", ".lyrics", 18000, new { 
+					congratsDelayMs = 6200,
+					finalDelayMs = 12500
+				});
 			}
 			catch { /* no-op */ }
 		}

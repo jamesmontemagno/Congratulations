@@ -107,6 +107,8 @@
 
       const total = cycleMs || 14000; // slightly longer than last line delay
       const congratsDelay = (options && options.congratsDelayMs) || 5800; // line 5 ~5.6s
+      const finalDelay = (options && options.finalDelayMs) || 12500; // line 9 timing
+      
       const chorusBurst = () => {
         const cx = window.innerWidth * 0.5;
         const cy = window.innerHeight * 0.45;
@@ -116,6 +118,17 @@
           spawnBurst(jx, jy, 110);
         }
       };
+      
+      const finalBurst = () => {
+        const cx = window.innerWidth * 0.5;
+        const cy = window.innerHeight * 0.55;
+        for(let i=0;i<4;i++){
+          const jx = cx + rand(-150, 150);
+          const jy = cy + rand(-100, 100);
+          spawnBurst(jx, jy, 90);
+        }
+      };
+      
       const run = () => {
         // restart sequence by toggling class
         root.classList.remove('play');
@@ -131,6 +144,8 @@
         root.classList.add('play');
         // schedule synced confetti for "Congratulations" line
         setTimeout(chorusBurst, congratsDelay);
+        // schedule confetti for final "Yeah, we made it" line
+        setTimeout(finalBurst, finalDelay);
       };
       run();
       setInterval(run, total);
