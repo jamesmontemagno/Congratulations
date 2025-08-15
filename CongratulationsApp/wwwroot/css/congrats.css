@@ -338,3 +338,108 @@ body::after {
   0%, 100% { filter: brightness(1) contrast(1) saturate(1); }
   50% { filter: brightness(1.08) contrast(1.06) saturate(1.1); }
 }
+
+/* Mode Toggle */
+.mode-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+}
+
+.malone-toggle {
+  padding: 0.5rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.malone-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.malone-toggle.active {
+  background: linear-gradient(45deg, #ff0080, #8000ff);
+  border-color: #ff0080;
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+}
+
+/* Mobile responsiveness for toggle */
+@media (max-width: 768px) {
+  .mode-toggle {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+  
+  .malone-toggle {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Low Effects Mode */
+body.low-effects {
+  background: 
+    radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 50%, #0f0f23 100%),
+    radial-gradient(circle at 20% 30%, rgba(29, 78, 216, 0.15), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(147, 51, 234, 0.1), transparent 40%);
+  animation: gentleStarShift 20s ease-in-out infinite;
+}
+
+@keyframes gentleStarShift {
+  0%, 100% { background-position: 0% 0%, 20% 30%, 80% 70%; }
+  50% { background-position: 0% 0%, 30% 40%, 70% 60%; }
+}
+
+body.low-effects::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 10% 80%, white, transparent),
+    radial-gradient(2px 2px at 70% 10%, rgba(255,255,255,0.7), transparent);
+  background-size: 200px 200px, 150px 150px, 100px 100px, 180px 180px, 160px 160px;
+  animation: gentleSparkle 15s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes gentleSparkle {
+  0%, 100% { opacity: 0.6; transform: translateY(0px); }
+  50% { opacity: 0.9; transform: translateY(-5px); }
+}
+
+/* Low effects overrides for existing animations */
+body.low-effects .line {
+  animation-duration: 1.5s !important;
+}
+
+body.low-effects .line .ink {
+  background: linear-gradient(45deg, #e2e8f0, #cbd5e1, #94a3b8) !important;
+  background-size: 200% 200% !important;
+  animation-duration: 3s !important;
+}
+
+body.low-effects .shimmer::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent) !important;
+  animation-duration: 2s !important;
+}
+
+/* Ensure Malone mode gets full effects */
+body.malone-mode {
+  /* Inherit the original intense styles - no overrides needed */
+}

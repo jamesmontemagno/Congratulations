@@ -25,7 +25,11 @@
   }
 
   function spawnBurst(x, y, count = 120){
-    for(let i=0; i<count; i++){
+    // Check for low effects mode
+    const isLowEffects = document.body.classList.contains('low-effects');
+    const adjustedCount = isLowEffects ? Math.round(count * 0.3) : count; // 30% confetti in low effects mode
+    
+    for(let i=0; i<adjustedCount; i++){
       confetti.push({
         x, y,
         r: rand(2,5),

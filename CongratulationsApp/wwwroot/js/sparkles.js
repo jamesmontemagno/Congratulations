@@ -27,7 +27,11 @@
   }
 
   function initStars(){
-    const count = Math.round((canvas.width * canvas.height) / 12000); // density
+    // Adjust star density based on effects mode
+    const isLowEffects = document.body.classList.contains('low-effects');
+    const baseDensity = isLowEffects ? 15000 : 12000; // Fewer stars in low effects mode
+    const count = Math.round((canvas.width * canvas.height) / baseDensity);
+    
     stars = new Array(count).fill(0).map(() => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -43,18 +47,25 @@
     ctx.clearRect(0,0,canvas.width, canvas.height);
 
     // ease parallax toward target
-    parallax.x += (target.x - parallax.x) * 0.05;
-    parallax.y += (target.y - parallax.y) * 0.05;
+    const isLowEffects = document.body.classList.contains('low-effects');
+    const parallaxStrength = isLowEffects ? 0.02 : 0.05; // Reduce parallax in low effects
+    parallax.x += (target.x - parallax.x) * parallaxStrength;
+    parallax.y += (target.y - parallax.y) * parallaxStrength;
 
     for(const st of stars){
       st.a += st.s;
       const tw = (Math.sin(st.a) + 1) * 0.5; // 0..1
-      const px = st.x + parallax.x * (1 - st.d) * 10; // farther stars move less
-      const py = st.y + parallax.y * (1 - st.d) * 10;
+      const parallaxDistance = isLowEffects ? 5 : 10; // Reduce parallax distance in low effects
+      const px = st.x + parallax.x * (1 - st.d) * parallaxDistance; // farther stars move less
+      const py = st.y + parallax.y * (1 - st.d) * parallaxDistance;
+
+      // Adjust glow intensity based on mode
+      const glowIntensity = isLowEffects ? 0.2 : 0.35;
+      const coreIntensity = isLowEffects ? 0.5 : 0.8;
 
       // soft glow
       const grd = ctx.createRadialGradient(px, py, 0, px, py, st.r * 6);
-      grd.addColorStop(0, `rgba(255,255,255,${0.35 * tw + 0.05})`);
+      grd.addColorStop(0, `rgba(255,255,255,${glowIntensity * tw + 0.05})`);
       grd.addColorStop(1, 'rgba(255,255,255,0)');
       ctx.fillStyle = grd;
       ctx.beginPath();
@@ -62,7 +73,7 @@
       ctx.fill();
 
       // core
-      ctx.fillStyle = `rgba(255,255,255,${0.8 * tw + 0.2})`;
+      ctx.fillStyle = `rgba(255,255,255,${coreIntensity * tw + 0.2})`;
       ctx.beginPath();
       ctx.arc(px, py, st.r, 0, Math.PI*2);
       ctx.fill();
@@ -91,5 +102,13 @@
     target.y = (e.beta || 0) / 45;  // -1..1 approx
   }
 
+  // Listen for mode changes to re-initialize stars
+  function onModeChange() {
+    initStars();
+  }
+
   window.addEventListener('DOMContentLoaded', mount);
+  
+  // Make the mode change function globally available
+  window.sparklesOnModeChange = onModeChange;
 })();
