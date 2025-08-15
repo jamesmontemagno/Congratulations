@@ -25,7 +25,6 @@ body {
   background-size: 400% 400%, 300% 300%, 250% 250%, 200% 200%, 200% 200%;
   animation: 
     trippyShift1 8s ease-in-out infinite,
-    trippyShift2 12s ease-in-out infinite reverse,
     colorCycle 15s linear infinite,
     pulseIntense 6s ease-in-out infinite;
   color: var(--text);
@@ -37,12 +36,6 @@ body {
   25% { background-position: 100% 0%, 0% 100%, 0% 0%, 50% 50%, 50% 50%; }
   50% { background-position: 100% 100%, 0% 0%, 100% 0%, 100% 0%, 0% 100%; }
   75% { background-position: 0% 100%, 100% 0%, 50% 100%, 0% 50%, 100% 50%; }
-}
-
-@keyframes trippyShift2 {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  33% { transform: rotate(120deg) scale(1.1); }
-  66% { transform: rotate(240deg) scale(0.9); }
 }
 
 @keyframes colorCycle {
@@ -73,7 +66,7 @@ body::before {
     radial-gradient(ellipse 70vmax 50vmax at 50% 10%, rgba(128,0,255,0.18), transparent 60%),
     conic-gradient(from 0deg at 30% 70%, rgba(255,128,0,0.1), transparent 30%, rgba(0,128,255,0.1) 60%, transparent);
   filter: blur(40px);
-  animation: psychedelicFloat 20s ease-in-out infinite, trippyRotate 25s linear infinite;
+  animation: psychedelicFloat 20s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
 }
@@ -90,7 +83,7 @@ body::after {
   filter: blur(30px) saturate(150%);
   mix-blend-mode: screen;
   animation: 
-    auroraRotate 45s linear infinite, 
+    auroraRotate 60s linear infinite, 
     auroraFloat 18s ease-in-out infinite,
     intensePulse 8s ease-in-out infinite;
   pointer-events: none;
@@ -284,15 +277,10 @@ body::after {
 
 /* Extra keyframes for trippy effects */
 @keyframes psychedelicFloat {
-  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  25% { transform: translate(20px, -30px) rotate(90deg) scale(1.1); }
-  50% { transform: translate(-15px, 20px) rotate(180deg) scale(0.9); }
-  75% { transform: translate(-25px, -10px) rotate(270deg) scale(1.05); }
-}
-
-@keyframes trippyRotate {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(360deg) scale(1.02); }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -30px) scale(1.05); }
+  50% { transform: translate(-15px, 20px) scale(0.95); }
+  75% { transform: translate(-25px, -10px) scale(1.02); }
 }
 
 @keyframes auroraFloat {
@@ -308,7 +296,7 @@ body::after {
 
 @keyframes auroraRotate {
   0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.08); }
+  50% { transform: rotate(180deg) scale(1.03); }
   100% { transform: rotate(360deg) scale(1); }
 }
 
