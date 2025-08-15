@@ -6,13 +6,15 @@ Experience the iconic lyrics of "Congratulations" brought to life with mesmerizi
 
 ## ✨ Features
 
-- **🌈 Psychedelic Background**: Multi-layered animated gradients with color cycling, rotation, and intense visual effects
+- **🌟 Dual Effect Modes**: Switch between low-impact and intense "Malone Mode" effects
+- **✨ Low Effects Mode** (Default): Gentle starry background with subtle animations for performance and accessibility
+- **🌈 Malone Mode**: Full psychedelic experience with multi-layered animated gradients, color cycling, and intense visual effects
 - **📝 Sequential Lyric Animation**: Each line fades in dramatically with perfect timing
-- **🎊 Interactive Confetti**: Click or tap anywhere to trigger confetti bursts
+- **🎊 Interactive Confetti**: Click or tap anywhere to trigger confetti bursts (reduced intensity in low effects mode)
 - **✨ Parallax Sparkles**: Mouse-reactive twinkling stars that follow your cursor
 - **🎨 Gradient Text Effects**: Animated rainbow text with shimmer effects on key lines
 - **📱 Responsive Design**: Works beautifully on desktop, tablet, and mobile
-- **♿ Accessibility**: Respects `prefers-reduced-motion` for users who need it
+- **♿ Accessibility**: Respects `prefers-reduced-motion` and provides low-impact default experience
 - **⚡ Blazor WebAssembly**: Built with cutting-edge .NET technology
 
 ## 🚀 Live Demo
@@ -68,6 +70,13 @@ Modify confetti density in `wwwroot/js/congrats.js`:
 spawnBurst(jx, jy, 110); // Third parameter controls particle count
 ```
 
+### Effect Modes
+Toggle between low-impact and intense experiences:
+- **Low Effects Mode**: Default starry background with reduced particles for better performance
+- **Malone Mode**: Full psychedelic experience with all intense visual effects enabled
+
+Use the toggle button in the top-right corner to switch modes.
+
 ### Background Effects
 Disable trippy effects for a calmer experience:
 ```css
@@ -78,7 +87,20 @@ Disable trippy effects for a calmer experience:
 
 ## 🌟 Effects Breakdown
 
-### Background Layers
+### Effect Modes
+**Low Effects Mode (Default)**
+- Simple starry night background with gentle gradients
+- Reduced confetti particles (30% of full intensity)
+- Subtle sparkle animations with reduced parallax
+- Toned-down text effects while maintaining readability
+
+**Malone Mode**
+- Multi-layered animated gradients with color cycling
+- Full confetti intensity with complex particle systems  
+- Intense sparkle animations with full parallax effects
+- Psychedelic text effects with full intensity
+
+### Background Layers (Malone Mode)
 1. **Base Gradients**: Multiple animated linear gradients
 2. **Color Cycling**: Hue rotation with saturation/brightness changes
 3. **Floating Overlays**: Psychedelic radial and conic gradients
