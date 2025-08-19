@@ -110,7 +110,8 @@ body.malone-mode .line:hover {
 
 /* Only animate when play class is active */
 .lyrics.play .line {
-  animation: dramaticReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  /* shorter, snappier reveal to match the song's vocal timing */
+  animation: dramaticReveal 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* Ensure lines stay hidden when not playing */
@@ -208,15 +209,15 @@ body.malone-mode .line:hover {
 }
 
 /* Timed delays for each line - sequential with clear gaps */
-.lyrics.play .line-1 { animation-delay: 0.5s; }
-.lyrics.play .line-2 { animation-delay: 2.0s; }
-.lyrics.play .line-3 { animation-delay: 3.5s; }
-.lyrics.play .line-4 { animation-delay: 5.0s; }
-.lyrics.play .line-5 { animation-delay: 6.5s; }
-.lyrics.play .line-6 { animation-delay: 8.0s; }
-.lyrics.play .line-7 { animation-delay: 9.5s; }
-.lyrics.play .line-8 { animation-delay: 11.0s; }
-.lyrics.play .line-9 { animation-delay: 12.5s; }
+.lyrics.play .line-1 { animation-delay: 0.4s; /* ~400ms */ }
+.lyrics.play .line-2 { animation-delay: 1.6s; /* ~1600ms */ }
+.lyrics.play .line-3 { animation-delay: 2.9s; /* ~2900ms */ }
+.lyrics.play .line-4 { animation-delay: 4.3s; /* ~4300ms */ }
+.lyrics.play .line-5 { animation-delay: 6.2s; /* anchor: "Congratulations" */ }
+.lyrics.play .line-6 { animation-delay: 7.6s; /* follow-up */ }
+.lyrics.play .line-7 { animation-delay: 9.0s; }
+.lyrics.play .line-8 { animation-delay: 10.6s; }
+.lyrics.play .line-9 { animation-delay: 12.5s; /* anchor: final "Yeah, we made it" */ }
 
 /* Emphasis sizes */
 .big { font-size: clamp(1.4rem, 2.6vw + 1rem, 3.2rem); }
